@@ -1,28 +1,48 @@
+- name: Stat directories if they exists
+  stat: 
+    path: "{{ item }}"
+  register: GIT_DIR
+  with_items:
+  - "{{ GIT_CONFIG }}"
+  - "{{ GIT_LOGS }}"
+  - "{{ GIT_DATA }}"
+  - "{{ GIT_RUNNER_CONFIG }}"
+  - "{{ GIT_CERT }}"
+- name: Create directories if they don't exists
+  file: 
+    path: "{{ item.item }}" 
+    state: directory
+  when: item.stat.exists == false
+  with_items:
+  - "{{ GIT_DIR.results }}"
+- name: Get docker network info.
+  docker_network_info: 
+    name: "{{ DOCKER_NETWORK }}"
+  register: DOCKER_NET
+- name: Print if not existss
+  debug:
+    msg: " The required network {{ 'exists' if DOCKER_NET.exists else 'does not exists' }}"
+- name: Create docker network
+  docker_network:
+    name: "{{ DOCKER_NETWORK }}"
+- name: Copy gitlab certs to container
+  copy: src="{{ item }}" dest="{{ GIT_CERT }}"
+  with_items:
+  - server-cert.pem
+  - server-key.pem
 
 - name: Replace contains in docker-compose
   copy: src=docker-compose.yml.j2 dest="{{ role_path }}/files/docker-compose.yml"
 
-- name: Prepare the gitlab image
-  replace: 
-    path: "{{ role_path }}/files/docker-compose.yml"
-    regexp: GITLAB_IMG
-    replace: "{{ GIT_IMG }}"
-
-- name: Prepare gitlab host
+- name: Prepare the docker compose.
   replace:
-    path: "{{ role_path }}/files/docker-compose.yml"
-    regexp: URL
-    replace: "https://{{ GIT_HOST }}:50443"
-
-- name: Prepare the gitlab aliase
-  replace:
-    path: "{{ role_path }}/files/docker-compose.yml"
-    regexp: ALIAS
-    replace: "gitlab.{{ GIT_HOST }}"
-
-- name: Prepare the gitlab aliase
-  replace:
-    path: "{{ role_path }}/files/docker-compose.yml"
-    regexp: GITLAB_RUNNER_IMG
-    replace: "{{ GIT_RUN_IMG }}"
+    path: "{{role_path }}/files/docker-compose.yml"
+    regexp: "{{ item.regexp1 }}"
+    replace: "{{ item.replace }}"
+  with_items:
+  - { regexp1: 'GITLAB_IMG', replace: "{{ GIT_IMG | default('docker.io/gitlab/gitlab-ce:latest') }}" }
+  - { regexp1: 'URL', replace: "https://{{ GIT_HOST | default('localhost') }}:50443" }
+  - { regexp1: 'ALIAS', replace: "gitlab.{{ GIT_HOST | default('localhost') }}" }
+  - { regexp1: 'GITLAB_RUNNER_IMG', replace: "{{ GIT_RUN_IMG | default('docker.io/gitlab/gitlab-runner:latest') }}" }
+  - { regexp1: 'GITLAB_NETWORK', replace: "{{ DOCKER_NETWORK }}" }
 

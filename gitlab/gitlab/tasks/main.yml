@@ -1,7 +1,6 @@
 ---
 # tasks file for /root/lab/gitlab
 
-#- import_tasks: patches.yml
-#- import_tasks: param.yml
-#- import_tasks: gitlab.yml
-- import_tasks: sagar.yml
+- import_tasks: patches.yml
+- import_tasks: param.yml
+- import_tasks: gitlab.yml
