@@ -11,12 +11,11 @@
   ignore_errors: True
 
 - name: stop and remove GitLab docker container
-  shell: docker stop GitLab  && docker rm  GitLab
+  shell: "docker stop {{ item }}  && docker rm  {{ item }}"
   ignore_errors: yes
-
-- name: stop and remove GitLab_Runner docker container
-  shell: docker stop GitLab_Runner  && docker rm  GitLab_Runner
-  ignore_errors: yes
+  with_items:
+  - GitLab
+  - GitLab_Runner
 
 - name: Run Gitlab
   shell: docker-compose up -d chdir={{ DOCKER_COMP }} 
