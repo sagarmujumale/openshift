@@ -1,0 +1,19 @@
+
+- name: Install docker and EPEL release.
+  yum: name=epel-release state=latest
+
+- name: Install other packages
+  yum: pkg={{ item }} state=present
+  with_items:
+  - docker-compose
+  - python2-pip
+  - docker
+
+- name: Upgrade python Pip
+  command: pip install --upgrade pip
+
+- name: Install docker pip libraries
+  pip: name={{ item }} state=latest
+  with_items:
+  - docker
+#  - docker-compose

@@ -1,0 +1,28 @@
+
+- name: Replace contains in docker-compose
+  copy: src=docker-compose.yml.j2 dest="{{ role_path }}/files/docker-compose.yml"
+
+- name: Prepare the gitlab image
+  replace: 
+    path: "{{ role_path }}/files/docker-compose.yml"
+    regexp: GITLAB_IMG
+    replace: "{{ GIT_IMG }}"
+
+- name: Prepare gitlab host
+  replace:
+    path: "{{ role_path }}/files/docker-compose.yml"
+    regexp: URL
+    replace: "https://{{ GIT_HOST }}:50443"
+
+- name: Prepare the gitlab aliase
+  replace:
+    path: "{{ role_path }}/files/docker-compose.yml"
+    regexp: ALIAS
+    replace: "gitlab.{{ GIT_HOST }}"
+
+- name: Prepare the gitlab aliase
+  replace:
+    path: "{{ role_path }}/files/docker-compose.yml"
+    regexp: GITLAB_RUNNER_IMG
+    replace: "{{ GIT_RUN_IMG }}"
+

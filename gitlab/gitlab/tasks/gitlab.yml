@@ -1,0 +1,33 @@
+---
+
+- name: set SElinux permissive for access to volumes from containers (old)
+  shell: semanage permissive -a svirt_lxc_net_t
+  become: yes
+  ignore_errors: True
+
+- name: set SElinux permissive for access to volumes from containers (new)
+  shell: semanage permissive -a container_t
+  become: yes
+  ignore_errors: True
+
+- name: stop and remove GitLab docker container
+  shell: docker stop GitLab  && docker rm  GitLab
+  ignore_errors: yes
+
+- name: stop and remove GitLab_Runner docker container
+  shell: docker stop GitLab_Runner  && docker rm  GitLab_Runner
+  ignore_errors: yes
+
+- name: Run Gitlab
+  shell: docker-compose up -d chdir={{ DOCKER_COMP }} 
+
+- name: initializing Gitlab
+  block:
+    - name: Wait for Gitlab to come up
+      uri:
+        url: "https://:50443"
+        status_code: 200
+      register: result
+      until: result is succeeded
+      retries: 50
+      delay: 10

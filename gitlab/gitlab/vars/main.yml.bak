@@ -1,0 +1,14 @@
+---
+# vars file for /root/lab/gitlab
+
+GIT_HOST: 
+CONFIG: /srv/gitlab
+GIT_CONFIG: /srv/gitlab/config
+GIT_LOGS: /srv/gitlab/logs
+GIT_DATA: /srv/gitlab/data
+GIT_CERT: /srv/gitlab/certs
+GIT_RUNNER_CONFIG: /srv/gitrunner/config
+DOCKER_COMP: gitlab/files
+DOCKER_NETWORK: development
+GITLAB_HTTPS_PORT: 50443
+GITLAB_SSH_PORT: 50022
