@@ -30,6 +30,9 @@ def cert_key():
       print("Provided certificate key is either not exists or inaccessible")
 
 def env():
+  os.system("yum install epel-release")
+  os.system("yum install ansible docker")
+  os.system("systemctl restart docker")
   print("""################################################################################################################################### "
 "Press 'yes/y/YES' if certificates are placed in gitlab/files directory. if not then press 'no/n/NO' to provide certificate path. "
 "###################################################################################################################################""")

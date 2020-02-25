@@ -12,6 +12,6 @@ DOCKER_COMP: gitlab/files
 DOCKER_NETWORK: development
 GITLAB_HTTPS_PORT: 50443
 GITLAB_SSH_PORT: 50022
-GIT_IMG: kube1.netcracker.com:5000/sagar/gitlab/gitlab-ce:v1
-GIT_RUN_IMG: kube1.netcracker.com:5000/sagar/gitlab/gitlab-runner:v1
+#GIT_IMG: kube1.netcracker.com:5000/sagar/gitlab/gitlab-ce:v1
+#GIT_RUN_IMG: kube1.netcracker.com:5000/sagar/gitlab/gitlab-runner:v1
 GIT_HOST: ops-master.netcracker.com
